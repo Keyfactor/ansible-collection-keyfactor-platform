@@ -1,0 +1,9 @@
+{
+    "ANSIBLE_MODULE_ARGS": {
+        "name":"test_field",
+        "description": "TestFieldDescription2",
+        "validate_certs": "False",
+        "state": "absent",
+        "data_type" : 1
+    }
+}
