@@ -16,8 +16,8 @@ short_description: Create Collections.
 version_added: "2.11"
 
 description:
-    - This module handles the creating and checking existing modules.
-      updating or deleting existing modules are not yet supported. We are looking
+    - This module handles creating new or checking existing modules.
+      Updating or deleting existing modules are not yet supported. We are looking
       to add these capabilities in the future. This module also currently supports check mode.
 
 options:
@@ -72,6 +72,15 @@ EXAMPLES = '''
     duplication_field: 0,
     show_on_dashboard: true,
     favorite: false
+- name: Create a Collections in Keyfactor
+  keyfactor_collections:
+    state: "present"
+    name: "PodCollection2"
+    description: "Pod Collection Copied from Id"
+    copy_from_id: 2
+    duplication_field: 0,
+    show_on_dashboard: false,
+    favorite: false
 '''
 
 RETURN = '''
@@ -79,6 +88,10 @@ changed:
     description: Whether or not a change was made
     type: bool
     returned: always
+msg:
+    description: Message if an module does not get expected parameters
+    type: str
+    returned: sometimes
 '''
 
 from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
