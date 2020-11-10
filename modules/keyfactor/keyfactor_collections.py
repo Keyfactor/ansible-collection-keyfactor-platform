@@ -114,9 +114,10 @@ def run_module():
         changed=False
     )
 
+    # Enable Suppot for Ansible Check-Mode
     module = AnsibleKeyfactorModule(
         argument_spec=argument_spec,
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     # if the user is working with this module in only check mode we do not
