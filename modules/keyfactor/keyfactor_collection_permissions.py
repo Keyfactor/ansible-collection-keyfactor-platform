@@ -6,7 +6,6 @@ ANSIBLE_METADATA = {
     'supported_by': 'keyfactor'
 }
 
-#TODO Update Documentation
 DOCUMENTATION = '''
 ---
 module: keyfactor_role
@@ -42,17 +41,17 @@ extends_documentation_fragment:
 author:
     - Sulav Acharya (@sulavacharya-inf)
 '''
-#TODO Update Examples
+
 EXAMPLES = '''
 
-# Create a test role and description with permission APIRead and assign to identity KEYFACTOR\\Test
+# Remove Permissions from Keyfactor Collection
 - name: Remove a Permission from Keyfactor Collection
   keyfactor_collection_permissions:
   name: "Pod Collection"
   state: "absent"
   role_id: 2
 
-- name: Remove a Permission from Keyfactor Collection
+- name: Add permissions to the Keyfactor Collection
   keyfactor_collection_permissions:
   name: "Pod Collection"
   state: "present"
