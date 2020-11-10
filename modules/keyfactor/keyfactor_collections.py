@@ -176,13 +176,11 @@ def createRequestedState(module, isPayload=False):
         
 
 def compareState(currentState, requestedState):
-    file = open("demo.txt", "a")
     for key, value in currentState.items():
         if str(key) == 'Id':
             continue
         elif value != requestedState.get(str(key)):
             return False
-    file.close()
     return True
 
 
@@ -196,9 +194,6 @@ def handleAdd(module, payload):
             return True
         module.fail_json(msg='Failed.')
     except Exception as e:
-        file = open("demo.txt", "a")
-        file.write(str(info))
-        file.close()
         content = info.pop('body', '')
         error = (json.loads(content)['ErrorCode'])
         if error == '0xA011000A':
