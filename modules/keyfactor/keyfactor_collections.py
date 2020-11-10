@@ -6,7 +6,6 @@ ANSIBLE_METADATA = {
     'supported_by': 'community'
 }
 
-#TODO Update Documentation
 DOCUMENTATION = '''
 ---
 module: keyfactor_collections
@@ -41,6 +40,10 @@ options:
         description: Duplication Field Option for Collections. Required if present
         required: false
         choices: [0,1,2,4]
+            - 0 : None 
+            - 1 : Common Name
+            - 2 : Distinguished Name
+            - 4 : Principal Name
     show_on_dashboard:
         description: Show on Dashboard.
         required: false
@@ -109,6 +112,8 @@ def run_module():
         copy_from_id=dict(type='int', required=False, default=None),
     )
 
+    mutually_exclusive_args = [["query", "copy_from_id"]]
+
     # seed the result dict in the object
     result = dict(
         changed=False
@@ -117,6 +122,7 @@ def run_module():
     # Enable Suppot for Ansible Check-Mode
     module = AnsibleKeyfactorModule(
         argument_spec=argument_spec,
+        mutually_exclusive=mutually_exclusive_args,
         supports_check_mode=True
     )
 
@@ -158,7 +164,7 @@ def handleStatePresent(module):
     return handleAdd(module, createRequestedState(module, True))
 
 def createRequestedState(module, isPayload=False):
-    # The payload is different that the requested state
+    # The Payload is different than the Requested State
     result = {
             "Name": module.params['name'], 
             "Description": module.params['description'],
@@ -199,9 +205,6 @@ def handleAdd(module, payload):
         error = (json.loads(content)['ErrorCode'])
         if error == '0xA011000A':
             message = 'Unable to update the given module: ' + module.params['name'] + '\n This feature is in development.'
-            module.fail_json(msg=message)
-        if error == '0xA011000F':
-            message = 'Please supply either a Query or a CopyFromId, not both.'
             module.fail_json(msg=message)
         module.fail_json(msg='Failed.')
 
