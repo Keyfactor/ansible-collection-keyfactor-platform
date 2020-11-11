@@ -20,7 +20,10 @@ class AnsibleKeyfactorModule(AnsibleModule):
 
         if (self.params['url'] == None):
             self.params['url'] = os.environ.get('KEYFACTOR_ADDR')
-        
+
+        if (self.params.get('ca_path') == None):
+            self.params['ca_path'] = os.environ.get('CERTICATE_STORE_PATH')
+
         if (os.environ.get('KEYFACTOR_IGNORE_SSL') != None):
             self.params['validate_certs'] = False
 
@@ -31,12 +34,15 @@ class AnsibleKeyfactorModule(AnsibleModule):
         dict_headers['Content-Type'] = 'application/json'
         dict_headers['X-Keyfactor-Requested-With'] = 'APIClient'
         url = self.params['url'] + endpoint
+        ca_path = self.params.get('ca_path', None)
         
         body = json.dumps(payload)
         resp, info = fetch_url(self, url, data=body,
             headers=dict_headers,
             method=method,
-            timeout=socket_timeout, unix_socket=None)
+            timeout=socket_timeout,
+            unix_socket=None,
+            ca_path=ca_path)
         status = info['status']
         if status in ( 401, 403 ):
             return self.fail_json(msg='Authentication failed.')
