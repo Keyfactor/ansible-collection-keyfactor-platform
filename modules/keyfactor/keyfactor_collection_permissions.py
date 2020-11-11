@@ -15,7 +15,11 @@ short_description: This module is used to configure permissions for keyfactor co
 version_added: "2.11"
 
 description:
-    - "Update Keyfactor Collection Permissions"
+    - This module handles adding and updating permissions on a specific collection for a given keyfactor role.
+      The user will provide a keyfactor role_id and a list of appropriate permissions: Read, EditMetadata, Recover, Revoke and Delete 
+      This permissions will be updating the existing permissions of that collection for the given keyfactor role.
+      Currently this module does not support checkmode.
+
 
 options:
     name:
@@ -33,6 +37,7 @@ options:
     permissions:
         description:
             - Set of permissions for the collection to have. Required only if the state is present
+            - ['Read', 'EditMetadata', 'Recover', 'Revoke', 'Delete']
         required: false
 
 extends_documentation_fragment:
