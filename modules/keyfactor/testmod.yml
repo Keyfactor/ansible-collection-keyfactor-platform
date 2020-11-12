@@ -3,12 +3,14 @@
   tasks:
   - name: Create Identity in Keyfactor
     keyfactor_identity:
+      src: "CMSAPI"
       name: "KEYFACTOR\\Test"
       state: 'present'
   - name: Create a Role in Keyfactor
     keyfactor_role:
       name: "AnsibleTestRole"
       description: "AnsibleTestRoleDescription"
+      src: "CMSAPI",
       state: 'present'
       permissions:
         - 'APIRead'
@@ -16,13 +18,15 @@
         - "KEYFACTOR\\Test"
   - name: Create a Metadata Field in Keyfactor
     keyfactor_metadata_fields:
-      name: "PodName"
-      description: "Pod Name"
+      name: "PodName_Test"
+      src: "/Keyfactor/Api/"
+      description: "Pod_Name_test"
       state: "present"
       allow_api: true
       data_type: 1
   - name: Ensure Metadata Field does not exist in Keyfactor
     keyfactor_metadata_fields:
       name: "AnsibleTestField"
+      src: "/Keyfactor/Api/"
       state: "absent"
       data_type: 1
