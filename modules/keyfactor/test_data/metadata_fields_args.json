@@ -3,6 +3,7 @@
         "name":"test_field",
         "description": "TestFieldDescription2",
         "validate_certs": "False",
+        "src": "/Keyfactor/Api/",
         "state": "absent",
         "data_type" : 1
     }

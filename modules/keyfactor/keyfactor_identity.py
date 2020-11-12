@@ -23,6 +23,10 @@ options:
         description:
             - This is the Identity name.  (<domain>\<username>)
         required: true
+    src:
+        description:
+            - Name of the Virtual Directory
+        required: true
     state:
         description:
         required: true
@@ -41,6 +45,7 @@ EXAMPLES = '''
 - name: Create Identity in Keyfactor
   keyfactor_identity:
     name: "KEYFACTOR\\Test"
+    src: "CMSAPI"
     state: 'present'
 '''
 
@@ -55,7 +60,9 @@ from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
 
 def run_module():
 
-    argument_spec = dict()
+    argument_spec = dict(
+        src=dict(type='str', required=True)
+    )
 
     # seed the result dict in the object
     result = dict(
@@ -83,7 +90,8 @@ def run_module():
 import json
 
 def handleAdd(module):
-    endpoint = '/CMSAPI/Security/1/AddIdentity'
+    url = module.params.pop('src')
+    endpoint = url+'/Security/1/AddIdentity'
     payload = { "Account": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
@@ -101,7 +109,8 @@ def handleAdd(module):
         module.fail_json(msg='Failed Add Error.')
 
 def handleDelete(module):
-    endpoint = '/CMSAPI/Security/1/DeleteIdentity'
+    url = module.params.pop('src')
+    endpoint = url+'/Security/1/DeleteIdentity'
     payload = { "Account": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:

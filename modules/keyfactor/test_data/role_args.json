@@ -3,6 +3,7 @@
         "name":"TestRole3",
         "description": "TestRoleDescription2",
         "validate_certs": "False",
+        "src": "CMSAPI",
         "state": "present",
         "identities":["KEYFACTOR\\Test"],
         "permissions":["APIRead"]

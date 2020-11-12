@@ -23,6 +23,10 @@ options:
         description:
             - Name of metadata field
         required: true
+    src:
+        description:
+            - Name of the Virtual Directory
+        required: true
     description:
         description:
             - Description of metadata field.  Required if present
@@ -40,6 +44,7 @@ EXAMPLES = '''
 - name: Create a Metadata Field in Keyfactor
   keyfactor_metadata_fields:
     name: "PodName"
+    src: "KeyfactorAPI"
     description: "Pod Name"
     state: "present"
     allow_api: true
@@ -59,6 +64,7 @@ from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
 def run_module():
 
     argument_spec = dict(
+        src=dict(type='str', required=True),
         description=dict(type='str', required=False),
         data_type=dict(type='int', required=True, choices=[1,2,3,4,5,6,7,8]),
         hint=dict(type='str', required=False),
@@ -107,7 +113,7 @@ def handleStatePresent(module):
     return handleAdd(module, request)
 
 def createRequestedState(module):
-    return { 
+    return {
         "Name": module.params['name'], 
         "Description": module.params['description'],
         "DataType":module.params['data_type'],
@@ -131,7 +137,8 @@ def compareState(currentState, requestedState):
     return False
 
 def handleAdd(module, payload):
-    endpoint = '/Keyfactor/Api/MetadataFields'
+    url = module.params.pop('src')
+    endpoint = url+'/MetadataFields'
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
         content = resp.read()
@@ -156,7 +163,8 @@ def handleStateAbsent(module):
     return False
 
 def handleDelete(module, id):
-    endpoint = ('/Keyfactor/API/MetadataFields/' + str(id))
+    url = module.params.pop('src')
+    endpoint = url+'/MetadataFields/' + str(id)
     resp, info = module.handleRequest("DELETE", endpoint)
     status = info['status']
     if status in ( 200, 204 ):
@@ -164,7 +172,8 @@ def handleDelete(module, id):
     return False
 
 def handleGet(module):
-    endpoint = '/Keyfactor/API/MetadataFields/' + module.params['name']
+    url = module.params.get('src', None)
+    endpoint = url+'/MetadataFields/' + module.params['name']
     resp, info = module.handleRequest("GET", endpoint)
     try:
         content = resp.read()
@@ -181,7 +190,8 @@ def handleGet(module):
         module.fail_json(msg=message)
 
 def handleUpdate(module, payload):
-    endpoint = '/Keyfactor/API/MetadataFields/'
+    url = module.params.pop('src')
+    endpoint = url+'MetadataFields/'
 
     resp, info = module.handleRequest("PUT", endpoint, payload)
     try:
