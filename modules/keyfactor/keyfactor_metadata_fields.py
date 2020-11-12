@@ -64,7 +64,7 @@ from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
 def run_module():
 
     argument_spec = dict(
-        src=dict(type='str', required=True),
+        src=dict(type='str', required=False, default="KeyfactorAPI"),
         description=dict(type='str', required=False),
         data_type=dict(type='int', required=True, choices=[1,2,3,4,5,6,7,8]),
         hint=dict(type='str', required=False),

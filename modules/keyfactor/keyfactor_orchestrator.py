@@ -74,7 +74,7 @@ def run_module():
         # TODO: capabilities match
         # capabilities=dict(type='list', required=False, default=[]),
         platform=dict(type='int', required=True),
-        src=dict(type='str', required=True)
+        src=dict(type='str', required=True, default="/KeyfactorPortal/")
     )
 
     # seed the result dict in the object

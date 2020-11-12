@@ -61,7 +61,7 @@ from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
 def run_module():
 
     argument_spec = dict(
-        src=dict(type='str', required=True)
+        src=dict(type='str', required=False, default="CMSAPI")
     )
 
     # seed the result dict in the object

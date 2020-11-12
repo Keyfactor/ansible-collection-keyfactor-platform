@@ -76,7 +76,7 @@ def run_module():
 
     argument_spec = dict(
         description=dict(type='str', required=True),
-        src=dict(type='str', required=True),
+        src=dict(type='str', required=False, default="CMSAPI"),
         identities=dict(type='list', required=False, default=[]),
         permissions=dict(type='list', required=False, default=[])
     )
