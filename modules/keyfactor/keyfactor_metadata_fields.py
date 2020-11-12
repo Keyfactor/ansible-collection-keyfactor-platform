@@ -25,7 +25,7 @@ options:
         required: true
     src:
         description:
-            - Name of the Virtual Directory
+            - Name of the Virtual Directory, Default: KeyfactorAPI
         required: true
     description:
         description:
@@ -44,7 +44,6 @@ EXAMPLES = '''
 - name: Create a Metadata Field in Keyfactor
   keyfactor_metadata_fields:
     name: "PodName"
-    src: "KeyfactorAPI"
     description: "Pod Name"
     state: "present"
     allow_api: true

@@ -10,8 +10,9 @@ python -m ansible.modules.keyfactor.keyfactor_metadata_fields tmp/metadata_field
 
 
 ### Note
-	> **Important**: The keyfactor address should to contain a traling / for sources field to work as intended.
+	**Important**: The keyfactor address should to contain a traling / for sources field to work as intended.
 
+# Environmental Variables
 export KEYFACTOR_ADDR=https://kftest.keyfactor.lab/
 export KEYFACTOR_USER=KEYFACTOR\\Administrator
 export KEYFACTOR_PASSWORD=

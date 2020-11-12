@@ -24,7 +24,7 @@ options:
         required: true
     src:
         description:
-            - Name of the Virtual Directory
+            - Name of the Virtual Directory. Default: KeyfactorPortal
         required: true
     platform:
         description:
@@ -48,14 +48,12 @@ EXAMPLES = '''
 - name: Approve .Net Orchestrator
   keyfactor_orchestrator:
     name: "kftest.keyfactor.lab"
-    src: "/Keyfactor/Portal/"
     platform: 1
     state: 'present'
 # Disapprove Orchestrator
 - name: Disapprove Java Orchestrator
   keyfactor_orchestrator:
     name: "kftest.keyfactor.lab"
-    src: "/Keyfactor/Portal/"
     platform: 2
     state: 'absent'
 '''
@@ -74,7 +72,7 @@ def run_module():
         # TODO: capabilities match
         # capabilities=dict(type='list', required=False, default=[]),
         platform=dict(type='int', required=True),
-        src=dict(type='str', required=True, default="/KeyfactorPortal/")
+        src=dict(type='str', required=True, default="KeyfactorPortal")
     )
 
     # seed the result dict in the object

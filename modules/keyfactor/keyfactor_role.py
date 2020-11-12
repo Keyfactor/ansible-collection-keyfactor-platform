@@ -29,7 +29,7 @@ options:
         required: true
     src:
         description:
-            - Name of the Virtual Directory
+            - Name of the Virtual Directory. Default: CMSAPI
         required: true
     state:
         description:
@@ -51,7 +51,6 @@ EXAMPLES = '''
     name: "AnsibleTestRole"
     description: "AnsibleTestRoleDescription"
     state: 'present'
-    src='CMSAPI'
     permissions:
     - 'APIRead'
     identities: 
