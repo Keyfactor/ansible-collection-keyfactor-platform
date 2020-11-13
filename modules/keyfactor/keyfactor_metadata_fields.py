@@ -27,6 +27,9 @@ options:
         description:
             - Description of metadata field.  Required if present
         required: false
+    allow_api:
+        description:
+            - 
 
 extends_documentation_fragment:
     - keyfactor
@@ -78,7 +81,7 @@ def run_module():
 
     module = AnsibleKeyfactorModule(
         argument_spec=argument_spec,
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     # if the user is working with this module in only check mode we do not
@@ -95,6 +98,18 @@ def run_module():
     module.exit_json(**result)
 
 import json
+
+def checkMode(module):
+    current = handleGet(module)
+    if module.params['state'] == 'absent':
+        if current:
+            return True
+        return False
+    if module.params['state'] == 'present':
+        if current:
+            requestedState = createRequestedState(module)
+            return compareState(current,requestedState)
+        return True
 
 def handleStatePresent(module):
     current = handleGet(module)
