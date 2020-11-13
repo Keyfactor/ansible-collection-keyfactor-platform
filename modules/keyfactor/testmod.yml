@@ -16,8 +16,8 @@
         - "KEYFACTOR\\Test"
   - name: Create a Metadata Field in Keyfactor
     keyfactor_metadata_fields:
-      name: "PodName"
-      description: "Pod Name"
+      name: "PodName_Test"
+      description: "Pod_Name_test"
       state: "present"
       allow_api: true
       data_type: 1
