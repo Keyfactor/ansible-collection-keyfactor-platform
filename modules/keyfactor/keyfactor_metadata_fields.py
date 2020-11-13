@@ -138,6 +138,7 @@ def run_module():
     # want to make any changes to the environment, just return the current
     # state with no modifications
     if module.check_mode:
+        result['changed'] = checkMode(module)
         module.exit_json(**result)
 
     if module.params['state'] == 'absent':
