@@ -198,7 +198,7 @@ def compareState(currentState, requestedState):
 
 def handleAdd(module, payload):
     url = module.params.pop('src')
-    endpoint = url+'/MetadataFields'
+    endpoint = url+'/MetadataFields/'
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
         content = resp.read()
@@ -251,7 +251,7 @@ def handleGet(module):
 
 def handleUpdate(module, payload):
     url = module.params.pop('src')
-    endpoint = url+'MetadataFields/'
+    endpoint = url+'/MetadataFields/'
 
     resp, info = module.handleRequest("PUT", endpoint, payload)
     try:
