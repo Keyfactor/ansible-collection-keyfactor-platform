@@ -30,6 +30,9 @@ options:
         description:
             - Whether the Role should be Present or Absent
         required: true
+    src:
+        description:
+            - Name of the Virtual Directory, Default: KeyfactorAPI
     role_id:
         description:
             - Primary Key Id for Keyfactor Role
@@ -77,6 +80,7 @@ def run_module():
 
     argument_spec = dict(
         name=dict(type='str', required=True),
+        src=dict(type='str', required=False, default="KeyfactorAPI"),
         role_id=dict(type='int', required=True),
         permissions=dict(type='list', required=False, choices=['Read', 'EditMetadata', 'Recover', 'Revoke', 'Delete'], default=[]),
     )
@@ -134,7 +138,8 @@ def validate(module):
         return True, current, ''
 
 def handleGet(module):
-    endpoint = '/KeyfactorAPI/CertificateCollections/'
+    url = module.params.get('src', None)
+    endpoint = url+'/CertificateCollections/'
     resp, info = module.handleRequest("GET", endpoint)
     try:
         content = resp.read()
@@ -151,7 +156,8 @@ def handleGet(module):
         module.fail_json(msg=message)
 
 def handleChange(module, payload, id):
-    endpoint = '/KeyfactorAPI/CertificateCollections/'+str(id)+'/Permissions'
+    url = module.params.pop('src')
+    endpoint = url+'/CertificateCollections/'+str(id)+'/Permissions'
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
         status = info['status']

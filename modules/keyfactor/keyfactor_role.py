@@ -75,6 +75,10 @@ options:
         description:
             - Description of Role
         required: true
+    src:
+        description:
+            - Name of the Virtual Directory. Default: CMSAPI
+        required: false
     state:
         description:
             - Whether the role should be present or absent
@@ -116,6 +120,7 @@ def run_module():
 
     argument_spec = dict(
         description=dict(type='str', required=True),
+        src=dict(type='str', required=False, default="CMSAPI"),
         identities=dict(type='list', required=False, default=[]),
         permissions=dict(type='list', required=False, default=[])
     )
@@ -192,7 +197,8 @@ def handleStatePresent(module):
     return handleAdd(module)
 
 def handleAdd(module):
-    endpoint = 'CMSAPI/Security/1/AddRole'
+    url = module.params.pop('src')
+    endpoint = url+'/Security/1/AddRole'
     payload = { 
         "name": module.params['name'], 
         "description": module.params['description'], 
@@ -218,7 +224,8 @@ def handleStateAbsent(module):
     return handleDelete(module)
 
 def handleDelete(module):
-    endpoint = 'CMSAPI/Security/1/DeleteRole'
+    url = module.params.pop('src')
+    endpoint = url+'/Security/1/DeleteRole'
     payload = { "name": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
@@ -235,7 +242,8 @@ def handleDelete(module):
         module.fail_json(msg='Failed.')
 
 def handleGet(module):
-    endpoint = 'CMSAPI/Security/1/EditRole'
+    url = module.params.get('src', None)
+    endpoint = url+'/Security/1/EditRole'
     payload = { "name": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
@@ -254,7 +262,8 @@ def handleGet(module):
 
 def handleUpdate(module):
     #"Cannot edit Role because it does not exist."
-    endpoint = 'CMSAPI/Security/1/EditRole'
+    url = module.params.pop('src')
+    endpoint = url+'/Security/1/EditRole'
     payload = { 
         "name": module.params['name'], 
         "description": module.params['description'],
@@ -277,7 +286,8 @@ def handleUpdate(module):
         module.fail_json(msg=message)
 
 def handleGetMode(module):
-    endpoint = 'CMSAPI/Security/1/GetRoles/'
+    url = module.params.pop('src')
+    endpoint = url+'/Security/1/GetRoles'
     resp, info = module.handleRequest("GET", endpoint)
     try:
         content = resp.read()

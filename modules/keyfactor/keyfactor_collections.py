@@ -36,6 +36,9 @@ options:
     query:
         description: Collections Query. Required if present or copy_from_id is not provided
         required: false
+    src:
+        description:
+            - Name of the Virtual Directory, Default: KeyfactorAPI
     duplication_field:
         description: Duplication Field Option for Collections. Required if present
         required: false
@@ -105,6 +108,7 @@ def run_module():
         name=dict(type='str', required=True),
         description=dict(type='str', required=False, default=''),
         state=dict(type='str', required=False, default=''),
+        src=dict(type='str', required=False, default="KeyfactorAPI"),
         query=dict(type='str', required=False, default=''),
         duplication_field=dict(type='int', required=False, choices=[0,1,2,4], default=0),
         show_on_dashboard=dict(type='bool', required=False, default=False), 
@@ -184,7 +188,7 @@ def createRequestedState(module, isPayload=False):
 
 def compareState(currentState, requestedState):
     for key, value in currentState.items():
-        if str(key) == 'Id':
+        if str(key) in ('Id', 'src'):
             continue
         elif value != requestedState.get(str(key)):
             return False
@@ -192,7 +196,8 @@ def compareState(currentState, requestedState):
 
 
 def handleAdd(module, payload):
-    endpoint = '/KeyfactorAPI/CertificateCollections'
+    url = module.params.pop('src')
+    endpoint = url+'/CertificateCollections/'
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
         content = resp.read()
@@ -221,7 +226,8 @@ def handleStateAbsent(module):
     return False
 
 def handleGet(module):
-    endpoint = '/KeyfactorAPI/CertificateCollections/'
+    url = module.params.get('src', None)
+    endpoint = url+'/CertificateCollections/'
     resp, info = module.handleRequest("GET", endpoint)
     try:
         content = resp.read()

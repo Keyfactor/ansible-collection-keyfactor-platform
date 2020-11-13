@@ -22,6 +22,10 @@ options:
         description:
             - This is the name of the orchestrator.  The name in combination with the platform is used to uniquely identify an orchestrator.
         required: true
+    src:
+        description:
+            - Name of the Virtual Directory. Default: KeyfactorPortal
+        required: false
     platform:
         description:
             - This is the numeric value representing the platform the orchestrator belongs to (0 - Unknown, 1 - .Net, 2 - Java, 3 - Mac, 4 - Android, 5 - Native)
@@ -67,7 +71,8 @@ def run_module():
     argument_spec = dict(
         # TODO: capabilities match
         # capabilities=dict(type='list', required=False, default=[]),
-        platform=dict(type='int', required=True)
+        platform=dict(type='int', required=True),
+        src=dict(type='str', required=True, default="KeyfactorPortal")
     )
 
     # seed the result dict in the object
@@ -129,7 +134,8 @@ def handleStateAbsent(module):
     return False
 
 def handleApprove(module, id):
-    endpoint = '/Keyfactor/Portal/Agent/Approve'
+    url = module.params.pop('src')
+    endpoint = url+'Agent/Approve'
     payload = { 
         "agentIds": [id]
     }
@@ -146,7 +152,8 @@ def handleApprove(module, id):
 
 
 def handleDisapprove(module, id):
-    endpoint = '/Keyfactor/Portal/Agent/Disapprove'
+    url = module.params.pop('src')
+    endpoint = url+'Agent/Disapprove'
     payload = { 
         "agentIds": [id]
     }
@@ -161,7 +168,8 @@ def handleDisapprove(module, id):
         module.fail_json(msg=content)
 
 def handleGet(module):
-    endpoint = '/Keyfactor/Portal/Agent/List'
+    url = module.params.get('src', None)
+    endpoint = url+'/Agent/List'
     payload = { 
         "query": "ClientMachine -eq \"" + module.params['name'] + "\" AND Platform -eq \"" + str(module.params['platform']) + "\"",
         "page": 1,
