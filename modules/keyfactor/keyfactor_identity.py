@@ -23,6 +23,10 @@ options:
         description:
             - This is the Identity name.  (<domain>\<username>)
         required: true
+    src:
+        description:
+            - Name of the Virtual Directory. Default: CMSAPI
+        required: false
     state:
         description:
         required: true
@@ -55,7 +59,9 @@ from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
 
 def run_module():
 
-    argument_spec = dict()
+    argument_spec = dict(
+        src=dict(type='str', required=False, default="CMSAPI")
+    )
 
     # seed the result dict in the object
     result = dict(
@@ -83,7 +89,8 @@ def run_module():
 import json
 
 def handleAdd(module):
-    endpoint = '/CMSAPI/Security/1/AddIdentity'
+    url = module.params.pop('src')
+    endpoint = url+'/Security/1/AddIdentity'
     payload = { "Account": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
@@ -101,7 +108,8 @@ def handleAdd(module):
         module.fail_json(msg='Failed Add Error.')
 
 def handleDelete(module):
-    endpoint = '/CMSAPI/Security/1/DeleteIdentity'
+    url = module.params.pop('src')
+    endpoint = url+'/Security/1/DeleteIdentity'
     payload = { "Account": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
