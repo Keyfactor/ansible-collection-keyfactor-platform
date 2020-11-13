@@ -141,7 +141,8 @@ def handleDelete(module):
         module.fail_json(msg='Failed.')
 
 def handleGet(module):
-    endpoint = '/CMSAPI/Security/1/GetIdentities/'
+    url = module.params.get('src')
+    endpoint = url+'/Security/1/GetIdentities'
     resp, info = module.handleRequest("GET", endpoint)
     try:
         content = resp.read()
