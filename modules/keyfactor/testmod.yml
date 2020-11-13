@@ -1,28 +1,57 @@
+---
 - name: Run module on local host
   hosts: localhost
-  tasks:
-  - name: Create Identity in Keyfactor
-    keyfactor_identity:
-      name: "KEYFACTOR\\Test"
-      state: 'present'
-  - name: Create a Role in Keyfactor
-    keyfactor_role:
-      name: "AnsibleTestRole"
-      description: "AnsibleTestRoleDescription"
-      state: 'present'
-      permissions:
-        - 'APIRead'
-      identities: 
-        - "KEYFACTOR\\Test"
-  - name: Create a Metadata Field in Keyfactor
-    keyfactor_metadata_fields:
-      name: "PodName"
-      description: "Pod Name"
-      state: "present"
-      allow_api: true
-      data_type: 1
-  - name: Ensure Metadata Field does not exist in Keyfactor
-    keyfactor_metadata_fields:
-      name: "AnsibleTestField"
-      state: "absent"
-      data_type: 1
+  tasks:    
+  # - name: Create Identity in Keyfactor
+  #   keyfactor_identity:
+  #     name: "KEYFACTOR\\Test"
+  #     state: 'present'
+  # # - name: Create a Role in Keyfactor
+  # #   keyfactor_role:
+  # #     name: "AnsibleTestRole"
+  # #     description: "AnsibleTestRoleDescription"
+  # #     state: 'present'
+  # #     permissions:
+  # #       - 'APIRead'
+  # #     identities: 
+  # #       - "KEYFACTOR\\Test"
+  # # - name: Create a Metadata Field in Keyfactor
+  # #   keyfactor_metadata_fields:
+  # #     name: "PodName"
+  # #     description: "Pod Name"
+  # #     state: "present"
+  # #     allow_api: true
+  # #     data_type: 1
+  # # - name: Ensure Metadata Field does not exist in Keyfactor
+  # #   keyfactor_metadata_fields:
+  # #     name: "AnsibleTestField"
+  # #     state: "absent"
+  # #     data_type: 1
+    - name: Keyfactor CA 
+      keyfactor_test:
+        name: Add CA
+        LogicalName: CstCA01
+        HostName: CstCA01.CstPKI.int
+        Delegate: true 
+        ForestRoot: CstPKI.int
+        Remote: false
+        Agent: null 
+        Standalone: true
+        MonitorThresholds: false
+        IssuanceMax: 0
+        IssuanceMin: 0
+        DenialMax: 0
+        FailureMax: 0
+        RFCEnforcement: 0
+        Properties: null
+        AllowedEnrollmentTypes: 0
+        KeyRetention: 2
+        KeyRetentionDays: null
+        ExplicitCredentials: false
+        ExplicitUser: null
+        UseAllowedRequesters: false
+        AllowedRequesters: []
+        state: 'present'
+
+        
+      
