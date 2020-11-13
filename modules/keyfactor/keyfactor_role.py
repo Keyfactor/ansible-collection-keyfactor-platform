@@ -6,7 +6,6 @@ ANSIBLE_METADATA = {
     'supported_by': 'keyfactor'
 }
 
-#TODO Update Documentation
 DOCUMENTATION = '''
 ---
 module: keyfactor_role
@@ -16,7 +15,56 @@ short_description: This module is used to configure roles in Keyfactor Command
 version_added: "2.11"
 
 description:
-    - "TODO:"
+    - "Add Keyfactor Role to a Keyfactor Identity"
+    - "Assign Permission to the specific Keyfactor Role. Attached is the complete list of available permissions."
+        - AgentAutoRegistrationModify
+        - AgentAutoRegistrationRead
+        - AgentManagementModify
+        - AgentManagementRead
+        - APIRead
+        - AuditingRead
+        - CertificateCollectionsModify
+        - CertificateEnrollmentEnrollCSR
+        - CertificateEnrollmentEnrollPFX
+        - CertificateEnrollmentGenerateCSR
+        - CertificateEnrollmentPendingCSR
+        - CertificateMetadataTypesModify
+        - CertificateMetadataTypesRead
+        - Certificates_EditMetadata
+        - Certificates_ImportPrivateKey,
+        - CertificatesDelete,
+        - CertificatesImport,
+        - CertificatesRead,
+        - CertificatesRecover,
+        - CertificatesRevoke,
+        - CertificateStoreManagementModify,
+        - CertificateStoreManagementRead,
+        - CertificateStoreManagementSchedule
+        - DashboardRead
+        - MacAutoEnrollManagementModify
+        - MacAutoEnrollManagementRead
+        - ManagementPortalRead
+        - MonitoringModify
+        - MonitoringRead
+        - MonitoringTest
+        - PKIManagementModify
+        - PKIManagementRead
+        - ReportsModify
+        - ReportsRead
+        - SecuritySettingsModify
+        - SecuritySettingsRead
+        - SSHEnterpriseAdmin
+        - SSHServerAdmin
+        - SSHUser
+        - SSLManagementModify
+        - SSLManagementRead
+        - SystemSettingsModify
+        - SystemSettingsRead
+        - WorkflowModify
+        - WorkflowParticipate
+        - WorkflowRead
+        - WorkflowTest"
+    - "This module also supports check mode."
 
 options:
     name:
@@ -38,9 +86,7 @@ extends_documentation_fragment:
 author:
     - David Fleming (@david_fleming)
 '''
-#TODO Update Examples
 EXAMPLES = '''
-
 # Create a test role and description with permission APIRead and assign to identity KEYFACTOR\\Test
 - name: Create a Role in Keyfactor
   keyfactor_role:
@@ -49,14 +95,13 @@ EXAMPLES = '''
     state: 'present'
     permissions:
     - 'APIRead'
-    identities: 
+    identities:
     - "KEYFACTOR\\Test"
 
 - name: Delete a Role in Keyfactor
   keyfactor_role:
     name: "AnsibleTestRole"
     state: 'absent'
-
 '''
 
 RETURN = '''
