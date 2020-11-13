@@ -26,7 +26,7 @@ options:
     src:
         description:
             - Name of the Virtual Directory, Default: KeyfactorAPI
-        required: true
+        required: false
     description:
         description:
             - Description of metadata field.  Required if present

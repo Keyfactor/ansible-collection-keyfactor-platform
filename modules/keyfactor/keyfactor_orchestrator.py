@@ -25,7 +25,7 @@ options:
     src:
         description:
             - Name of the Virtual Directory. Default: KeyfactorPortal
-        required: true
+        required: false
     platform:
         description:
             - This is the numeric value representing the platform the orchestrator belongs to (0 - Unknown, 1 - .Net, 2 - Java, 3 - Mac, 4 - Android, 5 - Native)

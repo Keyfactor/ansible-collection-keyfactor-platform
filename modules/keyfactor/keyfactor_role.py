@@ -30,7 +30,7 @@ options:
     src:
         description:
             - Name of the Virtual Directory. Default: CMSAPI
-        required: true
+        required: false
     state:
         description:
             - Whether the role should be present or absent

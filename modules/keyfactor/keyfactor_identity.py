@@ -26,7 +26,7 @@ options:
     src:
         description:
             - Name of the Virtual Directory. Default: CMSAPI
-        required: true
+        required: false
     state:
         description:
         required: true
