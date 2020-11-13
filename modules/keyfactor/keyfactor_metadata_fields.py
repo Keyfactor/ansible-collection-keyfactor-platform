@@ -27,9 +27,54 @@ options:
         description:
             - Description of metadata field.  Required if present
         required: false
+    data_type:
+        description:
+            - Data type of the metadata field. Required if present
+            - choices:
+                - 0 : string
+                - 1 : integer
+                - 2 : datetime
+                - 3 : boolean
+                - 4 : multi-value
+                - 5 : big text
+                - 6 : ip address
+                - 7 : binary
+        required: false
+    hint:
+        description: 
+            - Addition field to add hints
+        required: false
+    validation:
+        description: 
+            - Regular expression defination for the content
+        required: false
+    enrollment:
+        description: Add enrollment handling states
+            - choices:
+                - 0: Optional
+                - 1: Required
+                - 2: Hidden
+    options:
+        description: 
+            - Options for datatype 4, multiple choice
+        required: false
+    default:
+        description:
+            - Default value for the meta field
+            - Not supported for data type 2 (datetime) & 5 (bigtext)
+        required: false
+    explicit_update:
+        description:
+            - Require flag in Legacy API to overwrite values. Default false
+        required: false
     allow_api:
         description:
-            - 
+            - Allow Legacy API to get and set values. Default false
+        required: false
+    display_order:
+        description:
+            - Order in which the fields apprear. Default 0
+        required: false
 
 extends_documentation_fragment:
     - keyfactor
