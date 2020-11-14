@@ -6,7 +6,6 @@ ANSIBLE_METADATA = {
     'supported_by': 'community'
 }
 
-#TODO Update Documentation
 DOCUMENTATION = '''
 ---
 module: keyfactor_identity
@@ -16,7 +15,9 @@ short_description: Manage Identities in Keyfactor
 version_added: "2.11"
 
 description:
-    - "Module manages Identities in Keyfactor"
+    -  Module manages Identities in Keyfactor.
+       Users can either add a new Keyfactor Identity or delete an existing Keyfactor Identity.
+       Currently supports checkmode
 
 options:
     name:
@@ -70,13 +71,14 @@ def run_module():
 
     module = AnsibleKeyfactorModule(
         argument_spec=argument_spec,
-        supports_check_mode=False
+        supports_check_mode=True
     )
 
     # if the user is working with this module in only check mode we do not
     # want to make any changes to the environment, just return the current
     # state with no modifications
     if module.check_mode:
+        result['changed'] = checkMode(module)
         module.exit_json(**result)
 
     if module.params['state'] == 'absent':
@@ -87,6 +89,20 @@ def run_module():
     module.exit_json(**result)
 
 import json
+
+
+def checkMode(module):
+    current = handleGet(module)
+    # Since we do not update any parameter for an identity, a simple state check is
+    # enough for checkMode.
+    if module.params['state'] == 'absent':
+        if current:
+            return True
+        return False
+    if module.params['state'] == 'present':
+        if current:
+            return False
+        return True
 
 def handleAdd(module):
     url = module.params.pop('src')
@@ -118,12 +134,30 @@ def handleDelete(module):
             return True
         module.fail_json(msg='Failed.')
     except AttributeError:
-        
         content = info.pop('body', '')
         message = json.loads(content)['Message']
         if message == 'Can not delete Identity because it does not exist.':
             return False
         module.fail_json(msg='Failed.')
+
+def handleGet(module):
+    url = module.params.get('src')
+    endpoint = url+'/Security/1/GetIdentities'
+    resp, info = module.handleRequest("GET", endpoint)
+    try:
+        content = resp.read()
+        contentSet = json.loads(content)
+        collection = [collection_content for collection_content in contentSet if collection_content['AccountName'] == module.params['name']]
+        if collection:
+            collection = next(iter(collection))
+        return collection
+        module.fail_json(msg='Failed.')
+    except AttributeError:
+        content = info.pop('body', '')
+        message = json.loads(content)['Message']
+        if message == 'Identity with Name \'' + module.params['name'] + '\' does not exist.':
+            return {}
+        module.fail_json(msg=message)
 
 def main():
     run_module()
