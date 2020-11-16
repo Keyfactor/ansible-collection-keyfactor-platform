@@ -26,3 +26,32 @@
       name: "AnsibleTestField"
       state: "absent"
       data_type: 1
+  - name: Add & Update Keyfactor Store Type
+    keyfactor_certificate_store_type:
+      name: "PODSCS"
+      short_name: "PDCS"
+      local_server: False
+      allow_blueprint: True
+      require_store_password: True
+      supports_entry_password: True
+      custom_alias_support: "Required"
+      use_powershell: True
+      store_path_type: "Fixed"
+      store_path_fixed: "abc"
+      private_keys: "Required"
+      pfx_password_style: "Custom"
+      job_types:
+        - "Add"
+        - "Create"
+        - "Discovery"
+        - "Remove"
+        - "Reenrollment"
+      job_custom_fields:
+        - a
+        - b
+        - c
+      state: present
+  - name: Delete Keyfactor Certificate Store Type
+    keyfactor_certificate_store_type:
+      name: "PODSCS"
+      state: absent
