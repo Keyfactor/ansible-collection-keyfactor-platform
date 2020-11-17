@@ -18,7 +18,6 @@ description:
     - This module handles adding and updating store types on keyfactor.
     - The user only has to provide the name of the store they want to delete.
     - The user must provide proper list of job types
-    - Multiple Choice is not available for Store Path Type. This maybe added in the future.
     - Reenrollment is not available for Job Types This maybe added in the future. 
     - Currently this module does not support checkmode.
 
@@ -70,7 +69,7 @@ options:
       choices:
         -'Freeform'
         -'Fixed'
-        -'Multiple Choice' Currently not supported.
+        -'Multiple Choice'
       required: false
     store_path_fixed:
       description: Path for the Fixed Store Path Type Option. Required if Store path type is Fixed.
