@@ -1,6 +1,7 @@
+---
 - name: Run module on local host
   hosts: localhost
-  tasks:
+  tasks:    
   - name: Create Identity in Keyfactor
     keyfactor_identity:
       name: "KEYFACTOR\\Test"
@@ -26,3 +27,29 @@
       name: "AnsibleTestField"
       state: "absent"
       data_type: 1
+  - name: Create Keyfactor CA 
+    keyfactor_certificate_authority:
+      name: PodCA
+      host_name: PodCA_HostName
+      forest_root: PodCA_ForestName
+      allowed_enrollment_types: 3
+      sync_external_certificates: true
+      standalone: true
+      rfc_enforcement: false
+      key_retention: 1
+      key_retention_days: 50
+      monitor: true
+      issuance_max: 6
+      issuance_min: 2
+      denial_max: 1
+      failure_max: 2
+      use_allowed_requesters: true
+      allowed_requesters:
+        - "AnsibleTestRole"
+      state: 'present'
+  - name: Delete Keyfactor CA 
+    keyfactor_certificate_authority:
+      name: PodCA
+      host_name: PodCA_HostName
+      forest_root: PodCA_ForestName
+      state: 'absent'
