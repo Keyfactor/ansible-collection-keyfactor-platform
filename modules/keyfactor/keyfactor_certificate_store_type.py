@@ -266,7 +266,7 @@ def createState(current):
           "SupportedOperations": current.get("SupportedOperations"),
           "PasswordOptions": current.get("PasswordOptions"),
           "StorePathType": current.get("StorePathType"),
-          "StorePathValue": current.get("StorePathValue"),
+          "StorePathValue": current.get("StorePathType"),
           "PrivateKeyAllowed": current.get("PrivateKeyAllowed"),
           "JobProperties": current.get("JobProperties"),
           "ServerRequired": current.get("ServerRequired"),
