@@ -162,14 +162,16 @@ def run_module():
         pfx_password_style=dict(type='str', required=False, default='Default', choices=['Default', 'Custom']),
         private_keys=dict(type='str', required=False, default='Forbidden', choices=['Forbidden','Optional','Required']),
         use_powershell=dict(type='bool', required=False, default=False),
-        store_path_type=dict(type='str', required=False, default='Freeform', choices=['Freeform','Fixed']),
+        store_path_type=dict(type='str', required=False, default='Freeform', choices=['Freeform','Fixed', 'Multiple Choice']),
         store_path_fixed=dict(type='str', required=False, default=''),
+        store_path_choice=dict(type='list', required=False, default=[]),
         job_types=dict(type='list', required=False, default=[]),
         job_custom_fields=dict(type='list', required=False, default=[])
     )
 
     required_if_args = [
       ['state', 'present', ['short_name']],
+      ['store_path_type', 'Multiple Choice', ['store_path_choice']],
       ['store_path_type', 'Fixed', ['store_path_fixed']]
       ]
 
@@ -218,7 +220,10 @@ def createPayload(module):
   payload["SupportedOperations"] = handleSupportedOperations(module.params.get("job_types"))
   if module.params.get("store_path_type") == "Fixed":
     payload["StorePathType"] = module.params.get("store_path_fixed")
-    payload["StorePathValue"] = None
+    payload["StorePathValue"] = module.params.get("store_path_fixed")
+  if module.params.get("store_path_type") == "Multiple Choice":
+    payload["StorePathType"] = module.params.get("store_path_choice")
+    payload["StorePathValue"] = module.params.get("store_path_choice")
   else:
     payload["StorePathType"] = None
     payload["StorePathValue"] = None
