@@ -251,8 +251,6 @@ def handleCheckMode(module):
     return True
   elif module.params.get("state") == "absent":
     if current:
-        with open("demo.txt", 'a') as f:
-          f.write(str(current))
         return True
     return False
 
@@ -275,10 +273,6 @@ def createState(current):
 
 def compareState(current, requested):
   current = createState(current)
-  with open('demo.txt', 'a') as f:
-    for k,v in current.items():
-      if v != requested.get(k):
-        f.write('for k '+ str(k) + ' & value v ' + str(v) + ' the requested is '+ requested.get(k))
   if current == requested:
       return True
   return False
@@ -366,9 +360,6 @@ def handleGet(module):
       collection = [collection_content for collection_content in contentSet if collection_content['Name'] == module.params['name']]
       if collection:
           collection = next(iter(collection))
-          with open("demo.txt", 'a') as f:
-            f.write(str(collection))
-            f.write(str("\n\n\n"))
       return collection
   except AttributeError:
       content = info.pop('body', '')
