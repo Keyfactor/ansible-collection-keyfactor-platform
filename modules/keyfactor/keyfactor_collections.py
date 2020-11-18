@@ -196,7 +196,7 @@ def compareState(currentState, requestedState):
 
 
 def handleAdd(module, payload):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/CertificateCollections/'
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:

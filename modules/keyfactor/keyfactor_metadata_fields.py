@@ -197,7 +197,7 @@ def compareState(currentState, requestedState):
     return False
 
 def handleAdd(module, payload):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/MetadataFields/'
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
@@ -250,7 +250,7 @@ def handleGet(module):
         module.fail_json(msg=message)
 
 def handleUpdate(module, payload):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/MetadataFields/'
 
     resp, info = module.handleRequest("PUT", endpoint, payload)

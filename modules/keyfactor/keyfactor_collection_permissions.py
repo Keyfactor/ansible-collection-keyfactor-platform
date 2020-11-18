@@ -156,7 +156,7 @@ def handleGet(module):
         module.fail_json(msg=message)
 
 def handleChange(module, payload, id):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/CertificateCollections/'+str(id)+'/Permissions'
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
