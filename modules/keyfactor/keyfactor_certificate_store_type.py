@@ -221,11 +221,8 @@ def createPayload(module):
     payload["StorePathType"] = module.params.get("store_path_fixed")
     payload["StorePathValue"] = module.params.get("store_path_fixed")
   if module.params.get("store_path_type") == "Multiple Choice":
-    payload["StorePathType"] = module.params.get("store_path_choice")
-    payload["StorePathValue"] = module.params.get("store_path_choice")
-  else:
-    payload["StorePathType"] = None
-    payload["StorePathValue"] = None
+    payload["StorePathType"] = json.dumps(module.params.get("store_path_choice"))
+    payload["StorePathValue"] = json.dumps(module.params.get("store_path_choice"))
 
   if module.params.get("local_server") != True:
     payload["ServerRequired"] = True
