@@ -298,10 +298,11 @@ def createState(current):
            }
 
 def compareState(current, requested):
-    current = createState(current)
-    if current == requested:
-        return True
-    return False
+  current = createState(current)
+  for k,v in current.items():
+    if v != requested.get(k):
+      return False
+  return True
 
 def handleStatePresent(module):
     current = handleGet(module)
