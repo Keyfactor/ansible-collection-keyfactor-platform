@@ -286,7 +286,7 @@ def handleUpdate(module):
         module.fail_json(msg=message)
 
 def handleGetMode(module):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/Security/1/GetRoles'
     resp, info = module.handleRequest("GET", endpoint)
     try:
