@@ -186,13 +186,15 @@ def compareState(current, module):
 
     for key, value in requested.items():
         if value != current.get(str(key)):
-            return True
-    return False
+            return False
+    return True
 
 
 def handleStatePresent(module):
     current = handleGetMode(module)
-    if compareState(current, module):
+    if current:
+        if compareState(current, module):
+            return False  
         return handleUpdate(module)
     return handleAdd(module)
 
@@ -221,7 +223,10 @@ def handleAdd(module):
         module.fail_json(msg='Failed.')
 
 def handleStateAbsent(module):
-    return handleDelete(module)
+    current = handleGetMode(module)
+    if current:
+        return handleDelete(module)
+    return False
 
 def handleDelete(module):
     url = module.params.pop('src')
