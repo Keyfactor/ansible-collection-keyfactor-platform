@@ -147,7 +147,7 @@ def handleGet(module):
     try:
         content = resp.read()
         contentSet = json.loads(content)
-        collection = [collection_content for collection_content in contentSet if collection_content['AccountName'] == module.params['name']]
+        collection = [collection_content for collection_content in contentSet if collection_content['AccountName'].lower() == module.params['name'].lower()]
         if collection:
             collection = next(iter(collection))
         return collection
