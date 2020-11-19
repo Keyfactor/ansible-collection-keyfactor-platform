@@ -157,11 +157,11 @@ def checkMode(module):
     current = handleGetMode(module)
     if module.params['state'] == 'absent':
         if current:
-            return compareState(current, module)
+            return True
         return False
     if module.params['state'] == 'present':
         if current:
-            return compareState(current, module)
+            return not compareState(current, module)
         return True
 
 def createRequestedState(module):
