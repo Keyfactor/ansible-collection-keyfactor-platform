@@ -267,7 +267,7 @@ def handleCheckMode(module):
     current = handleGet(module)
     if module.params["state"] == "present":
         if current:
-            return compareState(current, requested)
+            return not compareState(current, requested)
         return True
     elif module.params["state"] == "absent":
         if current:
