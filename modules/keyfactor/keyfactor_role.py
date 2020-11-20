@@ -177,8 +177,6 @@ def compareState(current, module):
     # This could be an unordered list. Sets do not preserve order
     requested["identities"] = set(requested["identities"])
     requested["permissions"] = set(requested["permissions"])
-    # Valid is currently unused
-    current.pop('Valid')
     current = {k.lower():v for (k,v) in current.items()}
     # This could be an unordered list. Sets do not preserve order
     current["identities"] =  {i.encode('ascii').strip().capitalize() for i in current["identities"].split(',')}
@@ -199,7 +197,7 @@ def handleStatePresent(module):
     return handleAdd(module)
 
 def handleAdd(module):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/Security/1/AddRole'
     payload = { 
         "name": module.params['name'], 
@@ -229,7 +227,7 @@ def handleStateAbsent(module):
     return False
 
 def handleDelete(module):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/Security/1/DeleteRole'
     payload = { "name": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)
@@ -267,7 +265,7 @@ def handleGet(module):
 
 def handleUpdate(module):
     #"Cannot edit Role because it does not exist."
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/Security/1/EditRole'
     payload = { 
         "name": module.params['name'], 

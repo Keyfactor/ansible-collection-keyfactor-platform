@@ -105,7 +105,7 @@ def checkMode(module):
         return True
 
 def handleAdd(module):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/Security/1/AddIdentity'
     payload = { "Account": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)
@@ -124,7 +124,7 @@ def handleAdd(module):
         module.fail_json(msg='Failed Add Error.')
 
 def handleDelete(module):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'/Security/1/DeleteIdentity'
     payload = { "Account": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)

@@ -134,7 +134,7 @@ def handleStateAbsent(module):
     return False
 
 def handleApprove(module, id):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'Agent/Approve'
     payload = { 
         "agentIds": [id]
@@ -152,7 +152,7 @@ def handleApprove(module, id):
 
 
 def handleDisapprove(module, id):
-    url = module.params.pop('src')
+    url = module.params.get('src')
     endpoint = url+'Agent/Disapprove'
     payload = { 
         "agentIds": [id]
