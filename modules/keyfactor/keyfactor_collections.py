@@ -75,18 +75,18 @@ EXAMPLES = '''
     name: "PodCollection"
     description: "Pod Collection"
     query: "CN -contains \"Pod Collection\""
-    duplication_field: 0,
-    show_on_dashboard: true,
-    favorite: false
+    duplication_field: "0"
+    show_on_dashboard: "true"
+    favorite: "false"
 - name: Create a Collections in Keyfactor
   keyfactor_collections:
     state: "present"
     name: "PodCollection2"
     description: "Pod Collection Copied from Id"
-    copy_from_id: 2
-    duplication_field: 0,
-    show_on_dashboard: false,
-    favorite: false
+    copy_from_id: "2"
+    duplication_field: "0"
+    show_on_dashboard: "false"
+    favorite: "false"
 '''
 
 RETURN = '''
