@@ -1,0 +1,13 @@
+---
+  - name: Set Checkmode Variables
+    set_fact:
+      resource_state: "present"
+      resource_checkmode: "yes"
+      resource_display: "Checkmode - Create"
+
+  - import_tasks: resource.yml
+
+  - name: Verify checkmode result {{ last_result.changed }} vs {{ identity_1_expected_checkmode_present }}
+    fail:
+      msg: "Actual {{ last_result.changed }} vs Expected {{ identity_1_expected_checkmode_present }}"
+    when: last_result.changed != identity_1_expected_checkmode_present

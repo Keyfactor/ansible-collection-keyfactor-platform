@@ -1,0 +1,8 @@
+---
+- name: Run module on local host
+  hosts: localhost
+  tasks:    
+    - import_role:
+        name: keyfactor_role
+    - import_role:
+        name: keyfactor_identity

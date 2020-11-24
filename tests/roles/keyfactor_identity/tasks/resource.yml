@@ -1,0 +1,6 @@
+- name: "keyfactor_identity resource {{ resource_state }} - checkmode {{ resource_checkmode }}"
+  keyfactor_identity:
+    name: "{{ identity_1 }}"
+    state: "{{ resource_state }}"
+  check_mode: "{{ resource_checkmode }}"
+  register: last_result

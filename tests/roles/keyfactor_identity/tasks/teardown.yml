@@ -1,0 +1,7 @@
+---
+  - name: Set Teardown Variables
+    set_fact:
+      resource_state: "absent"
+      resource_checkmode: "no"
+
+  - import_tasks: resource.yml

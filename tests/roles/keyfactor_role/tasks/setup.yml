@@ -1,0 +1,18 @@
+---
+
+  - name: Set Setup Variables
+    set_fact:
+      resource_state: "present"
+      resource_checkmode: "no"
+      resource_display: "Create"
+
+  - import_tasks: resource.yml
+
+  - name: Fail if changed does not equal 1
+    fail:
+      msg: Changed
+    when: last_result.changed != 1
+
+  - name: Update Expected State
+    set_fact:
+      identity_1_expected_checkmode_present: 0

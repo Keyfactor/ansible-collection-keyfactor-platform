@@ -1,0 +1,26 @@
+---
+- name: Run Test Suite
+  block:
+    - import_tasks: checkmode.yml
+    - import_tasks: setup.yml
+      tags:
+      - setup
+    - import_tasks: checkmode.yml
+    - import_tasks: update.yml
+  always:
+    - import_tasks: teardown.yml
+      tags:
+      - teardown
+
+
+
+  # tasks :
+  #   - import_tasks: setup.yml
+  #     tags:
+  #     - setup
+  #   - import_tasks: update.yml
+
+  # handlers:
+  #   - import_tasks: teardown.yml
+  #     tags:
+  #     - teardown

@@ -1,0 +1,11 @@
+- name: "{{ resource_display }} keyfactor_role"
+  keyfactor_role:
+    name: "automated_testing_role"
+    description: "AnsibleTestRoleDescription"
+    state: "{{ resource_state }}"
+    permissions:
+      - 'APIRead'
+    identities: 
+      - "KEYFACTOR\\Administrator"
+  check_mode: "{{ resource_checkmode }}"
+  register: last_result

@@ -1,0 +1,12 @@
+---
+  - name: Set Teardown Variables
+    set_fact:
+      resource_state: "absent"
+      resource_checkmode: "no"
+      resource_display: "Destroy"
+
+  - import_tasks: resource.yml
+
+  - name: Update Expected State
+    set_fact:
+      identity_1_expected_checkmode_present: 1
