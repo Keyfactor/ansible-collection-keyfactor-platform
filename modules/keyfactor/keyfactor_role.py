@@ -141,13 +141,13 @@ def run_module():
     # want to make any changes to the environment, just return the current
     # state with no modifications
     if module.check_mode:
-        result['changed'] = checkMode(module)
+        result['changed'], result['id'] = checkMode(module)
         module.exit_json(**result)
 
     if module.params['state'] == 'absent':
         result['changed'] = handleStateAbsent(module)
     elif module.params['state'] == 'present':
-        result['changed'] = handleStatePresent(module)
+        result['changed'], result['id'] = handleStatePresent(module)
 
     module.exit_json(**result)
 
@@ -157,12 +157,12 @@ def checkMode(module):
     current = handleGetMode(module)
     if module.params['state'] == 'absent':
         if current:
-            return True
-        return False
+            return True, current['Id']
+        return False, None
     if module.params['state'] == 'present':
         if current:
-            return not compareState(current, module)
-        return True
+            return not compareState(current, module), current['Id']
+        return True, None
 
 def createRequestedState(module):
     return { 
@@ -192,8 +192,8 @@ def handleStatePresent(module):
     current = handleGetMode(module)
     if current:
         if compareState(current, module):
-            return False  
-        return handleUpdate(module)
+            return False, current['Id']  
+        return handleUpdate(module), current['Id']
     return handleAdd(module)
 
 def handleAdd(module):
@@ -208,8 +208,9 @@ def handleAdd(module):
     resp, info = module.handleRequest("POST", endpoint, payload)
     try:
         content = resp.read()
-        if (json.loads(content)['Valid']) == True:
-            return True
+        response = json.loads(content)
+        if (response['Valid']) == True:
+            return True, response['Id']
         module.fail_json(msg='Failed.')
     except AttributeError:
         content = info.pop('body', '')
