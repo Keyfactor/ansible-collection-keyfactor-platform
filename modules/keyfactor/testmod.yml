@@ -15,6 +15,8 @@
         - 'APIRead'
       identities: 
         - "KEYFACTOR\\Test"
+    register:
+      testRole
   - name: Create a Metadata Field in Keyfactor
     keyfactor_metadata_fields:
       name: "PodName_Test"
@@ -37,8 +39,8 @@
       supports_entry_password: True
       custom_alias_support: "Required"
       use_powershell: True
-      store_path_type: "Fixed"
-      store_path_fixed: "abc"
+      store_path_type: "Freeform"
+      # store_path_fixed: "abc"
       private_keys: "Required"
       pfx_password_style: "Custom"
       job_types:
@@ -52,10 +54,10 @@
         - b
         - c
       state: present
-  - name: Delete Keyfactor Certificate Store Type
-    keyfactor_certificate_store_type:
-      name: "PODSCS"
-      state: absent
+  # - name: Delete Keyfactor Certificate Store Type
+  #   keyfactor_certificate_store_type:
+  #     name: "PODSCS"
+  #     state: absent
   - name: Create Keyfactor CA 
     keyfactor_certificate_authority:
       name: PodCA
@@ -68,17 +70,36 @@
       key_retention: 1
       key_retention_days: 50
       monitor: true
-      issuance_max: 6
+      issuance_max: 7
       issuance_min: 2
       denial_max: 1
       failure_max: 2
       use_allowed_requesters: true
       allowed_requesters:
         - "AnsibleTestRole"
+        - "Administrator"
       state: 'present'
-  - name: Delete Keyfactor CA 
-    keyfactor_certificate_authority:
-      name: PodCA
-      host_name: PodCA_HostName
-      forest_root: PodCA_ForestName
-      state: 'absent'
+  # - name: Delete Keyfactor CA 
+  #   keyfactor_certificate_authority:
+  #     name: PodCA
+  #     host_name: PodCA_HostName
+  #     forest_root: PodCA_ForestName
+  #     state: 'absent'
+  - name: Create a Collections in Keyfactor
+    keyfactor_collections:
+      state: "present"
+      name: "PodCollection"
+      description: "Pod Collection"
+      query: "CN -contains \"Pod Collection\""
+      duplication_field: "0"
+      show_on_dashboard: "true"
+      favorite: "false"
+    register: collection
+
+  - name: Add permissions to the Keyfactor Collection
+    keyfactor_collection_permissions:
+      name: "PodCollection"
+      state: "present"
+      role_id: "{{ testRole.id }}"
+      permissions: ['Read', 'EditMetadata', 'Recover', 'Revoke', 'Delete']
+
