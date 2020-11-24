@@ -109,6 +109,8 @@ def handleAdd(module):
     endpoint = url+'/Security/1/AddIdentity'
     payload = { "Account": module.params['name']}
     resp, info = module.handleRequest("POST", endpoint, payload)
+    if info['status'] == -1:
+        module.fail_json(msg=info)
     try:
         content = resp.read()
         if (json.loads(content)['Valid']) == True:
@@ -122,6 +124,7 @@ def handleAdd(module):
         if message == 'Could not find user or Group.':
             module.fail_json(msg=message)
         module.fail_json(msg='Failed Add Error.')
+
 
 def handleDelete(module):
     url = module.params.get('src')
