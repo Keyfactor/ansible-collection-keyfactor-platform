@@ -28,7 +28,8 @@ options:
         required: false
         type: str
     ca:
-        description: Certificate authority
+        description: Certificate authority HostName\\\\LogicalName
+        required: true
         type: str
     cert_chain:
         description: Whether or not to include the full certificate chain in the downloaded PFX
@@ -102,7 +103,36 @@ author:
 '''
 
 EXAMPLES = '''
-TODO
+# Request a PFX with no chain and a specific password
+- name: Request a chain-less PFX
+  keyfactor_pfx_enrollment:
+    subject: 'CN=testcertificate'
+    template: 'WebServer'
+    ca: 'CA.my.domain\\CA'
+    cert_chain: False
+    pfx_password: Password123!
+
+# Request a PFX with metadata fields
+- name: Request PFX with metadata fields
+  keyfactor_pfx_enrollment:
+    subject: 'CN=EnrollmentFields'
+    template: 'WebServer'
+    ca: 'CA.my.domain\\CA'
+    metadata: {
+        'Owner': 'MyTeam',
+        'Reason': 'DeploymentTest'
+    }
+
+# Request a PFX with SANs
+- name: Request PFX with SANs
+  keyfactor_pfx_enrollment:
+    subject: 'CN=CertWithSans'
+    template: 'WebServer'
+    ca: 'CA.my.domain\\CA'
+    sans: {
+        ip: 192.168.1.100,
+        ip4: 192.168.1.100
+    }
 '''
 
 RETURN = '''
@@ -127,9 +157,102 @@ from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
 def run_module():
 
     argument_spec = dict(
-        # TODO: add documented fields to spec
-        platform=dict(type='int', required=True),
-        vdir=dict(type='str', required=True, default='KeyfactorAPI')
+        vdir=dict(
+            type='str',
+            default='KeyfactorAPI'
+        ),
+        name=dict(
+            type='str'
+        ),
+        subject=dict(
+            type='str',
+            required=True
+        ),
+        template=dict(
+            type='str',
+            required=True
+        ),
+        pfx_password=dict(
+            type='str'
+        ),
+        ca=dict(
+            type='str',
+            required=True
+        ),
+        cert_chain=dict(
+            type='bool',
+            default=True
+        ),
+        values_from_ad=dict(
+            type='bool',
+            default=False
+        ),
+        metadata=dict(
+            type='dict',
+            default={}
+        ),
+        additional_fields=dict(
+            type='dict',
+            default={}
+        ),
+        sans=dict(
+            type='dict',
+            default={},
+            options=dict(
+                other=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                rfc822=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                dns=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                x400=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                directory=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ediparty=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                uri=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ip=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ip4=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ip6=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                registeredid=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ms_ntprincipalname=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ms_ntdsreplication=dict(
+                    type='list',
+                    elements='raw'
+                )
+            )
+        )
     )
 
     # seed the result dict in the object
