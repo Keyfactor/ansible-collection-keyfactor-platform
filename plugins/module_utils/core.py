@@ -51,7 +51,7 @@ class AnsibleKeyfactorModule(AnsibleModule):
 def __updateSpec__(argument_spec):
     argument_spec.update(url_argument_spec())
     argument_spec.update(
-        name=dict(type='str', required=True),
+        name=dict(type='str'),
         state=dict(type='str', default='present', choices=['absent', 'present']),
         url_username=dict(type='str', aliases=['user'], required=False),
         url_password=dict(type='str', aliases=['password'], required=False, no_log=True),

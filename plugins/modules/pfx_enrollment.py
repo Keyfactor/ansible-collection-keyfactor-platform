@@ -2,7 +2,7 @@
 
 DOCUMENTATION = '''
 ---
-module: keyfactor_pfx_enrollment
+module: pfx_enrollment
 
 short_description: Request Enrollment for PFX Certificate in Keyfactor
 
@@ -40,10 +40,9 @@ options:
         type: bool
         default: false
     vdir:
-        description:
-            - Name of the API Virtual Directory. 
-            - Default: KeyfactorAPI
+        description: Name of the API Virtual Directory
         type: str
+        default: KeyfactorAPI
     metadata:
         description: Values for pre-defined certificate metadata fields
         type: dict
@@ -95,9 +94,6 @@ options:
                 description: MS_NTDSReplication
                 type: list
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - Matt Dobrowsky (@doebrowsk)
 '''
@@ -105,7 +101,7 @@ author:
 EXAMPLES = '''
 # Request a PFX with no chain and a specific password
 - name: Request a chain-less PFX
-  keyfactor_pfx_enrollment:
+  keyfactor.command.pfx_enrollment:
     subject: 'CN=testcertificate'
     template: 'WebServer'
     ca: 'CA.my.domain\\CA'
@@ -114,7 +110,7 @@ EXAMPLES = '''
 
 # Request a PFX with metadata fields
 - name: Request PFX with metadata fields
-  keyfactor_pfx_enrollment:
+  keyfactor.command.pfx_enrollment:
     subject: 'CN=EnrollmentFields'
     template: 'WebServer'
     ca: 'CA.my.domain\\CA'
@@ -125,7 +121,7 @@ EXAMPLES = '''
 
 # Request a PFX with SANs
 - name: Request PFX with SANs
-  keyfactor_pfx_enrollment:
+  kkeyfactor.command.pfx_enrollment:
     subject: 'CN=CertWithSans'
     template: 'WebServer'
     ca: 'CA.my.domain\\CA'
@@ -150,9 +146,9 @@ certificate_id:
     returned: success
 '''
 
-from json import json
-from datetime import datetime
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+import json
+from datetime import datetime, timezone
+from ansible_collections.keyfactor.command.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 
@@ -288,6 +284,10 @@ def run_module():
 def enroll(module):
     url = module.params.get('vdir', 'KeyfactorAPI')
     endpoint = url+'/Enrollment/PFX'
+
+    sans = module.params.get('sans', {})
+    filtered_sans = {k: v for k,v in sans.items() if v is not None}
+
     payload = {
         'CustomFriendlyName': module.params.get('name', None),
         'Password': module.params.get('pfx_password', None),
@@ -295,9 +295,9 @@ def enroll(module):
         'Subject': module.params.get('subject'),
         'IncludeChain': bool(module.params.get('cert_chain', False)),
         'CertificateAuthority': module.params.get('ca'),
-        'Timestamp': datetime.now(timezone.utc).isoformat(),
+        'Timestamp': datetime.now(timezone.utc).isoformat().replace('+00:00','Z'),
         'Template': module.params.get('template'),
-        'SANs': dict(module.params.get('sans', {})),
+        'SANs': dict(filtered_sans),
         'Metadata': dict(module.params.get('metadata', None)),
         'AdditionalEnrollmentFields': dict(module.params.get('additional_fields', None))
     }
@@ -306,12 +306,12 @@ def enroll(module):
     try:
         content = resp.read()
         response = json.loads(content)
+        cert_info = response['CertificateInformation']
         result = {
-            'pfx_certificate': response['Certificate'],
-            'pfx_password': response['Password'],
-            'certificate_id': response['KeyfactorId']
+            'pfx_certificate': cert_info['Pkcs12Blob'],
+            'pfx_password': cert_info['Password'],
+            'certificate_id': cert_info['KeyfactorId']
         }
-        return result
     except AttributeError:
         content = info.pop('body', '')
         message = json.loads(content)['Message']
