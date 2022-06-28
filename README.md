@@ -2,5 +2,5 @@ Update Ansible.cfg or set the appropriate environment variables
 * export ANSIBLE_LIBRARY=
 * export ANSIBLE_MODULE_UTILS=
 
-# Ansible Collection - keyfactor.command
+# Ansible Collection - keyfactor.platform
 

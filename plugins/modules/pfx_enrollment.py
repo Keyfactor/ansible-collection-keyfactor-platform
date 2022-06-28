@@ -101,7 +101,7 @@ author:
 EXAMPLES = '''
 # Request a PFX with no chain and a specific password
 - name: Request a chain-less PFX
-  keyfactor.command.pfx_enrollment:
+  keyfactor.platform.pfx_enrollment:
     subject: 'CN=testcertificate'
     template: 'WebServer'
     ca: 'CA.my.domain\\CA'
@@ -110,7 +110,7 @@ EXAMPLES = '''
 
 # Request a PFX with metadata fields
 - name: Request PFX with metadata fields
-  keyfactor.command.pfx_enrollment:
+  keyfactor.platform.pfx_enrollment:
     subject: 'CN=EnrollmentFields'
     template: 'WebServer'
     ca: 'CA.my.domain\\CA'
@@ -121,7 +121,7 @@ EXAMPLES = '''
 
 # Request a PFX with SANs
 - name: Request PFX with SANs
-  kkeyfactor.command.pfx_enrollment:
+  kkeyfactor.platform.pfx_enrollment:
     subject: 'CN=CertWithSans'
     template: 'WebServer'
     ca: 'CA.my.domain\\CA'
@@ -148,7 +148,7 @@ certificate_id:
 
 import json
 from datetime import datetime, timezone
-from ansible_collections.keyfactor.command.plugins.module_utils.core import AnsibleKeyfactorModule
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 
