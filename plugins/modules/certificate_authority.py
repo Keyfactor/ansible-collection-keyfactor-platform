@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': 'keyfactor'
-}
-
 DOCUMENTATION = '''
 ---
-module: keyfactor_certificate_authority
+module: certificate_authority
 
 short_description: This module is used to configure certificate authorities in the Keyfactor Command
 
@@ -113,9 +107,6 @@ options:
             - Whether the role should be present or absent
         required: true
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - Anthony Batlouni (@abatlouni-inf)
 '''
@@ -123,7 +114,7 @@ author:
 EXAMPLES = '''
 # Create a test role and description with permission APIRead and assign to identity KEYFACTOR\\Test
 - name: Create Keyfactor CA 
-    keyfactor_certificate_authority:
+    keyfactor.platform.certificate_authority:
       name: PodCA
       host_name: PodCA_HostName
       forest_root: PodCA_ForestName
@@ -143,7 +134,7 @@ EXAMPLES = '''
         - "AnsibleTestRole"
       state: 'present'
   - name: Delete Keyfactor CA 
-    keyfactor_certificate_authority:
+    keyfactor.platform.certificate_authority:
       name: PodCA
       host_name: PodCA_HostName
       forest_root: PodCA_ForestName
@@ -156,8 +147,9 @@ changed:
     type: bool
     returned: always
 '''
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+
 import json
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 

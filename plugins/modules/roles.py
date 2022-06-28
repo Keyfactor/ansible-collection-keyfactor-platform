@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': 'keyfactor'
-}
-
 DOCUMENTATION = '''
 ---
-module: keyfactor_role
+module: roles
 
 short_description: This module is used to configure roles in Keyfactor Command
 
@@ -84,16 +78,13 @@ options:
             - Whether the role should be present or absent
         required: true
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - David Fleming (@david_fleming)
 '''
 EXAMPLES = '''
 # Create a test role and description with permission APIRead and assign to identity KEYFACTOR\\Test
 - name: Create a Role in Keyfactor
-  keyfactor_role:
+  keyfactor.platform.roles:
     name: "AnsibleTestRole"
     description: "AnsibleTestRoleDescription"
     state: 'present'
@@ -103,7 +94,7 @@ EXAMPLES = '''
     - "KEYFACTOR\\Test"
 
 - name: Delete a Role in Keyfactor
-  keyfactor_role:
+  keyfactor.platform.roles:
     name: "AnsibleTestRole"
     state: 'absent'
 '''
@@ -114,7 +105,8 @@ changed:
     type: bool
     returned: always
 '''
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 

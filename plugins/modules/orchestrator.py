@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': 'keyfactor'
-}
-
 DOCUMENTATION = '''
 ---
-module: keyfactor_orchestrator
+module: orchestrator
 
 short_description: Approve/Disapprove Orchestrators in Keyfactor
 
@@ -36,9 +30,6 @@ options:
             - Whether the State should be present or absent
         choices: ["present", "absent"]
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - David Fleming (@david_fleming)
 '''
@@ -46,13 +37,13 @@ author:
 EXAMPLES = '''
 # Approve Orchestrator
 - name: Approve .Net Orchestrator
-  keyfactor_orchestrator:
+  keyfactor.platform.orchestrator:
     name: "kftest.keyfactor.lab"
     platform: 1
     state: 'present'
 # Disapprove Orchestrator
 - name: Disapprove Java Orchestrator
-  keyfactor_orchestrator:
+  keyfactor.platform.orchestrator:
     name: "kftest.keyfactor.lab"
     platform: 2
     state: 'absent'
@@ -64,7 +55,8 @@ changed:
     type: bool
     returned: always
 '''
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 

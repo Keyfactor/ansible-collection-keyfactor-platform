@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': 'community'
-}
-
 DOCUMENTATION = '''
 ---
-module: keyfactor_identity
+module: identities
 
 short_description: Manage Identities in Keyfactor
 
@@ -22,7 +16,7 @@ description:
 options:
     name:
         description:
-            - This is the Identity name.  (<domain>\<username>)
+            - This is the Identity name.  (<domain>\\<username>)
         required: true
     src:
         description:
@@ -34,9 +28,6 @@ options:
             - Whether the State should be present or absent
         choices: ["present", "absent"]
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - David Fleming (@david_fleming)
 '''
@@ -44,7 +35,7 @@ author:
 EXAMPLES = '''
 # Create Identity
 - name: Create Identity in Keyfactor
-  keyfactor_identity:
+  keyfactor.platform.identities:
     name: "KEYFACTOR\\Test"
     state: 'present'
 '''
@@ -56,7 +47,7 @@ changed:
     returned: always
 '''
 
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 

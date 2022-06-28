@@ -1,15 +1,8 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': 'community'
-}
-
-#TODO Update Documentation
 DOCUMENTATION = '''
 ---
-module: keyfactor_metadata_fields
+module: metadata_fields
 
 short_description: Short description goes here.
 
@@ -80,9 +73,6 @@ options:
             - Order in which the fields apprear. Default 0
         required: false
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - David Fleming (@david_fleming)
 '''
@@ -90,7 +80,7 @@ author:
 EXAMPLES = '''
 # Create a metadata field
 - name: Create a Metadata Field in Keyfactor
-  keyfactor_metadata_fields:
+  keyfactor.platform.metadata_fields:
     name: "PodName"
     description: "Pod Name"
     state: "present"
@@ -106,7 +96,7 @@ changed:
     returned: always
 '''
 
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 
