@@ -24,6 +24,7 @@ After the collection is installed, you can reference plugins in the collection w
 The modules included in the collection require a few settings to be provided either by the system environment, or passed in as parameters in a playbook (which overrides the value set in the environment).
 
 | Environment Variable | Parameter Override | Description |
+| --- | --- | --- |
 | `KEYFACTOR_ADDR` | `url` | The full URL to the Keyfactor site. Should not include the API Endpoint, but must end with a "/" |
 | `KEYFACTOR_USER` | `url_username` | The Keyfactor user to authenticate as when making API requests |
 | `KEYFACTOR_PASSWORD` | `url_password` | The password for the Keyfactor user |
