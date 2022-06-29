@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': 'community'
-}
-
 DOCUMENTATION = '''
 ---
-module: keyfactor_certificate_authority_crl
+module: publish_crl
 
 short_description: This module allows users to publish crls for a specific certificate authority.
 
@@ -31,17 +25,13 @@ options:
         description:
             - Name of the Virtual Directory, Default: KeyfactorAPI
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - David Fleming (@david_fleming)
 '''
 
 EXAMPLES = '''
-# Create a metadata field
-- name: Create a Metadata Field in Keyfactor
-  keyfactor_metadata_fields:
+- name: Publish a CRL from a CA
+  keyfactor.platform.publish_crl:
     name: "CA01"
     hostName: "SubCA01"
 '''
@@ -53,7 +43,7 @@ changed:
     returned: always
 '''
 
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
     argument_spec = dict(

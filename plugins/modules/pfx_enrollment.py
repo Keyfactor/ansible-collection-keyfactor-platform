@@ -2,7 +2,7 @@
 
 DOCUMENTATION = '''
 ---
-module: keyfactor_pfx_enrollment
+module: pfx_enrollment
 
 short_description: Request Enrollment for PFX Certificate in Keyfactor
 
@@ -28,7 +28,8 @@ options:
         required: false
         type: str
     ca:
-        description: Certificate authority
+        description: Certificate authority HostName\\\\LogicalName
+        required: true
         type: str
     cert_chain:
         description: Whether or not to include the full certificate chain in the downloaded PFX
@@ -39,10 +40,9 @@ options:
         type: bool
         default: false
     vdir:
-        description:
-            - Name of the API Virtual Directory. 
-            - Default: KeyfactorAPI
+        description: Name of the API Virtual Directory
         type: str
+        default: KeyfactorAPI
     metadata:
         description: Values for pre-defined certificate metadata fields
         type: dict
@@ -94,15 +94,41 @@ options:
                 description: MS_NTDSReplication
                 type: list
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - Matt Dobrowsky (@doebrowsk)
 '''
 
 EXAMPLES = '''
-TODO
+# Request a PFX with no chain and a specific password
+- name: Request a chain-less PFX
+  keyfactor.platform.pfx_enrollment:
+    subject: 'CN=testcertificate'
+    template: 'WebServer'
+    ca: 'CA.my.domain\\CA'
+    cert_chain: False
+    pfx_password: Password123!
+
+# Request a PFX with metadata fields
+- name: Request PFX with metadata fields
+  keyfactor.platform.pfx_enrollment:
+    subject: 'CN=EnrollmentFields'
+    template: 'WebServer'
+    ca: 'CA.my.domain\\CA'
+    metadata: {
+        'Owner': 'MyTeam',
+        'Reason': 'DeploymentTest'
+    }
+
+# Request a PFX with SANs
+- name: Request PFX with SANs
+  kkeyfactor.platform.pfx_enrollment:
+    subject: 'CN=CertWithSans'
+    template: 'WebServer'
+    ca: 'CA.my.domain\\CA'
+    sans: {
+        ip: 192.168.1.100,
+        ip4: 192.168.1.100
+    }
 '''
 
 RETURN = '''
@@ -120,16 +146,109 @@ certificate_id:
     returned: success
 '''
 
-from json import json
-from datetime import datetime
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+import json
+from datetime import datetime, timezone
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 
     argument_spec = dict(
-        # TODO: add documented fields to spec
-        platform=dict(type='int', required=True),
-        vdir=dict(type='str', required=True, default='KeyfactorAPI')
+        vdir=dict(
+            type='str',
+            default='KeyfactorAPI'
+        ),
+        name=dict(
+            type='str'
+        ),
+        subject=dict(
+            type='str',
+            required=True
+        ),
+        template=dict(
+            type='str',
+            required=True
+        ),
+        pfx_password=dict(
+            type='str'
+        ),
+        ca=dict(
+            type='str',
+            required=True
+        ),
+        cert_chain=dict(
+            type='bool',
+            default=True
+        ),
+        values_from_ad=dict(
+            type='bool',
+            default=False
+        ),
+        metadata=dict(
+            type='dict',
+            default={}
+        ),
+        additional_fields=dict(
+            type='dict',
+            default={}
+        ),
+        sans=dict(
+            type='dict',
+            default={},
+            options=dict(
+                other=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                rfc822=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                dns=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                x400=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                directory=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ediparty=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                uri=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ip=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ip4=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ip6=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                registeredid=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ms_ntprincipalname=dict(
+                    type='list',
+                    elements='raw'
+                ),
+                ms_ntdsreplication=dict(
+                    type='list',
+                    elements='raw'
+                )
+            )
+        )
     )
 
     # seed the result dict in the object
@@ -165,6 +284,10 @@ def run_module():
 def enroll(module):
     url = module.params.get('vdir', 'KeyfactorAPI')
     endpoint = url+'/Enrollment/PFX'
+
+    sans = module.params.get('sans', {})
+    filtered_sans = {k: v for k,v in sans.items() if v is not None}
+
     payload = {
         'CustomFriendlyName': module.params.get('name', None),
         'Password': module.params.get('pfx_password', None),
@@ -172,9 +295,9 @@ def enroll(module):
         'Subject': module.params.get('subject'),
         'IncludeChain': bool(module.params.get('cert_chain', False)),
         'CertificateAuthority': module.params.get('ca'),
-        'Timestamp': datetime.now(timezone.utc).isoformat(),
+        'Timestamp': datetime.now(timezone.utc).isoformat().replace('+00:00','Z'),
         'Template': module.params.get('template'),
-        'SANs': dict(module.params.get('sans', {})),
+        'SANs': dict(filtered_sans),
         'Metadata': dict(module.params.get('metadata', None)),
         'AdditionalEnrollmentFields': dict(module.params.get('additional_fields', None))
     }
@@ -183,12 +306,12 @@ def enroll(module):
     try:
         content = resp.read()
         response = json.loads(content)
+        cert_info = response['CertificateInformation']
         result = {
-            'pfx_certificate': response['Certificate'],
-            'pfx_password': response['Password'],
-            'certificate_id': response['KeyfactorId']
+            'pfx_certificate': cert_info['Pkcs12Blob'],
+            'pfx_password': cert_info['Password'],
+            'certificate_id': cert_info['KeyfactorId']
         }
-        return result
     except AttributeError:
         content = info.pop('body', '')
         message = json.loads(content)['Message']

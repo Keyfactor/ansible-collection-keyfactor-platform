@@ -22,7 +22,7 @@ class AnsibleKeyfactorModule(AnsibleModule):
             self.params['url'] = os.environ.get('KEYFACTOR_ADDR')
 
         if (self.params.get('ca_path') == None):
-            self.params['ca_path'] = os.environ.get('CERTICATE_STORE_PATH')
+            self.params['ca_path'] = os.environ.get('CERTIFICATE_STORE_PATH')
 
         if (os.environ.get('KEYFACTOR_IGNORE_SSL') != None):
             self.params['validate_certs'] = False
@@ -51,7 +51,7 @@ class AnsibleKeyfactorModule(AnsibleModule):
 def __updateSpec__(argument_spec):
     argument_spec.update(url_argument_spec())
     argument_spec.update(
-        name=dict(type='str', required=True),
+        name=dict(type='str'),
         state=dict(type='str', default='present', choices=['absent', 'present']),
         url_username=dict(type='str', aliases=['user'], required=False),
         url_password=dict(type='str', aliases=['password'], required=False, no_log=True),

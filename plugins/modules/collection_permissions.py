@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': 'keyfactor'
-}
-
 DOCUMENTATION = '''
 ---
-module: keyfactor_role
+module: collection_permissions
 
 short_description: This module is used to configure permissions for keyfactor collections
 
@@ -43,9 +37,6 @@ options:
             - ['Read', 'EditMetadata', 'Recover', 'Revoke', 'Delete']
         required: false
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - Sulav Acharya (@sulavacharya-inf)
 '''
@@ -54,17 +45,17 @@ EXAMPLES = '''
 
 # Remove Permissions from Keyfactor Collection
 - name: Remove a Permission from Keyfactor Collection
-  keyfactor_collection_permissions:
-  name: "Pod Collection"
-  state: "absent"
-  role_id: 2
+  keyfactor.platform.collection_permissions:
+      name: "Pod Collection"
+      state: "absent"
+      role_id: 2
 
 - name: Add permissions to the Keyfactor Collection
-  keyfactor_collection_permissions:
-  name: "Pod Collection"
-  state: "present"
-  role_id: 2
-  permissions: ['Read', 'EditMetadata', 'Recover', 'Revoke', 'Delete']
+  keyfactor.platform.collection_permissions:
+      name: "Pod Collection"
+      state: "present"
+      role_id: 2
+      permissions: ['Read', 'EditMetadata', 'Recover', 'Revoke', 'Delete']
 '''
 
 RETURN = '''
@@ -74,7 +65,7 @@ changed:
     returned: always
 '''
 
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 

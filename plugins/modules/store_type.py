@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': 'keyfactor'
-}
-
 DOCUMENTATION = '''
 ---
-module: keyfactor_certificate_store_type
+module: store_type
 
 short_description: This module is used to add, configure and delete keyfactor certificate store
 
@@ -99,8 +93,6 @@ options:
     job_custom_fields:
       description: Add custom fields to the Store Type
       required: false
-extends_documentation_fragment:
-    - keyfactor
 
 author:
     - Sulav Acharya (@sulavacharya-inf)
@@ -109,7 +101,7 @@ author:
 EXAMPLES = '''
 
 - name: Add & Update Keyfactor Store Type
-    keyfactor_certificate_store_type:
+    keyfactor.platform.store_type:
       name: "PODSCS"
       short_name: "PDCS"
       local_server: False
@@ -133,7 +125,7 @@ EXAMPLES = '''
         - c
       state: present
 - name: Delete Keyfactor Certificate Store Type
-    keyfactor_certificate_store_type:
+    keyfactor.platform.store_type:
       name: "PODSCS"
       state: absent
 '''
@@ -145,7 +137,7 @@ changed:
     returned: always
 '''
 
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 

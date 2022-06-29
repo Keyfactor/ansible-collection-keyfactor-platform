@@ -1,14 +1,8 @@
 #!/usr/bin/python
 
-ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': 'community'
-}
-
 DOCUMENTATION = '''
 ---
-module: keyfactor_collections
+module: collection
 
 short_description: Create Collections.
 
@@ -60,9 +54,6 @@ options:
         required: False
         default: None
 
-extends_documentation_fragment:
-    - keyfactor
-
 author:
     - Sulav Acharya (@sacharya-inf)
 '''
@@ -70,7 +61,7 @@ author:
 EXAMPLES = '''
 # Create a keyfactor collections
 - name: Create a Collections in Keyfactor
-  keyfactor_collections:
+  keyfactor.platform.collection:
     state: "present"
     name: "PodCollection"
     description: "Pod Collection"
@@ -79,7 +70,7 @@ EXAMPLES = '''
     show_on_dashboard: "true"
     favorite: "false"
 - name: Create a Collections in Keyfactor
-  keyfactor_collections:
+  keyfactor.platform.collection:
     state: "present"
     name: "PodCollection2"
     description: "Pod Collection Copied from Id"
@@ -100,7 +91,7 @@ msg:
     returned: sometimes
 '''
 
-from ansible.module_utils.keyfactor.core import AnsibleKeyfactorModule
+from ansible_collections.keyfactor.platform.plugins.module_utils.core import AnsibleKeyfactorModule
 
 def run_module():
 
